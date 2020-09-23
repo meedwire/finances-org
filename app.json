@@ -1,0 +1,12 @@
+{
+  "name": "finances-org",
+  "displayName": "finances-org",
+  "expo": {
+    "name": "finances-org",
+    "slug": "finances-org",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
