@@ -1,5 +1,6 @@
-import {StyleSheet} from 'react-native';
-import {Colors} from '../../Constants';
+import { StyleSheet } from 'react-native';
+
+import { Colors } from '../../Constants';
 
 export default StyleSheet.create({
   container: {
@@ -8,6 +9,7 @@ export default StyleSheet.create({
   boxContainer: {
     backgroundColor: Colors.CYAN,
     padding: 20,
+    marginTop: 20,
     borderBottomRightRadius: 26,
     borderBottomLeftRadius: 26,
     overflow: 'hidden',
@@ -27,5 +29,19 @@ export default StyleSheet.create({
   },
   textButtonAdd: {
     color: Colors.CYAN,
+  },
+  boxNothingAccounts: {
+    backgroundColor: Colors.COMMENT,
+    opacity: 0.9,
+    padding: 20,
+    borderRadius: 29,
+    height: '50%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  textNothingAccount: {
+    color: Colors.CYAN,
+    marginBottom: 20,
   },
 });

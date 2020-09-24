@@ -1,12 +1,13 @@
 import { useNavigation } from '@react-navigation/native';
+import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect, useContext } from 'react';
-import { View, StatusBar, FlatList } from 'react-native';
+import { View, FlatList } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { useValue } from 'react-native-redash';
 
 import { Colors } from '../../Constants';
 import { ContextScreen } from '../../Contexts';
-import { TypeConfig, TypeSpending } from '../../GlobalTypes';
+import { TypeAccount, TypeConfig, TypeSpending } from '../../GlobalTypes';
 import { GetRecenBalance } from '../../Helpers';
 import { money } from '../../Utils';
 import AnimatedColumn from '../../components/AnimatedColumn';
@@ -47,7 +48,9 @@ const Home: React.FC = () => {
         .map((sp) => sp);
 
       if (currbank.length > 0) {
-        const bal = GetRecenBalance(realm, currbank[0].currAccount);
+        const [bal] = realm
+          .objects<TypeAccount>('Accounts')
+          .filtered('type == $0', currbank[0].currAccount);
         if (bal) {
           setCurrBalance(bal.value);
         }
@@ -58,9 +61,8 @@ const Home: React.FC = () => {
         }
       }
 
-      console.log(spendings);
-
       setData(spendings);
+      realm.removeAllListeners();
     } catch (error) {
       console.log(error);
     }
@@ -73,13 +75,14 @@ const Home: React.FC = () => {
   useEffect(() => {
     (async () => {
       const realm = await getRealm();
-      realm.addListener('change', () => loadData());
+      realm.addListener('change', () => {
+        loadData();
+      });
     })();
   }, []);
 
   useEffect(() => {
     const focus = navigation.addListener('focus', () => {
-      loadData();
       setActiveScreen({ name: 'Home', isActive: true });
     });
 

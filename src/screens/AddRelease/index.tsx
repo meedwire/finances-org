@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
+import { StatusBar } from 'expo-status-bar';
 import React, { useContext, useEffect, useState } from 'react';
-import { View, StatusBar, TextInput, TouchableOpacity } from 'react-native';
+import { View, TextInput, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import { Colors } from '../../Constants';
@@ -29,16 +30,17 @@ const AddRelease: React.FC = () => {
   async function handleSave() {
     try {
       const realm = await getRealm();
-      const id = Math.max(
-        ...realm
-          .objects<TypeSpending>('Spending')
-          .map(({ id: prevId }) => Number(prevId))
-      );
-      console.log(
+      const lenght =
         realm
           .objects<TypeSpending>('Spending')
-          .map(({ id: prevId }) => Number(prevId))
-      );
+          .map(({ id: prevId }) => Number(prevId)).length === 0
+          ? [0]
+          : realm
+              .objects<TypeSpending>('Spending')
+              .map(({ id: prevId }) => Number(prevId));
+
+      const id = Math.max(...lenght);
+
       const data: TypeSpending = {
         id: id + 1,
         type: spending?.type,
@@ -55,6 +57,32 @@ const AddRelease: React.FC = () => {
         const balance = GetRecenBalance(realm, currBank.currAccount);
         if (balance && spending?.value) {
           const value = balance.value - spending?.value;
+
+          realm.write(() => {
+            realm.create('Spending', data);
+
+            realm.create('Balance', {
+              id: realm.objects('Balance').length + 1,
+              value,
+              type: 'MONEY',
+              description: currBank.currAccount,
+              created: new Date(),
+            });
+
+            const [account] = realm
+              .objects<TypeAccount>('Accounts')
+              .filtered('type == $0', currBank.currAccount);
+
+            if (account) {
+              account.value = value;
+            }
+          });
+        } else {
+          const [currValue] = realm
+            .objects<TypeAccount>('Accounts')
+            .filtered('type == $0', currBank.currAccount);
+
+          const value = currValue.value - spending?.value;
 
           realm.write(() => {
             realm.create('Spending', data);

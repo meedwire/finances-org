@@ -1,5 +1,6 @@
-import {StyleSheet} from 'react-native';
-import {Colors} from '../../Constants';
+import { StyleSheet } from 'react-native';
+
+import { Colors } from '../../Constants';
 
 export default StyleSheet.create({
   container: {
@@ -10,6 +11,8 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 10,
+    padding: 20,
+    marginTop: 20,
     backgroundColor: Colors.CYAN,
     justifyContent: 'space-between',
   },

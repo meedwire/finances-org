@@ -1,68 +1,50 @@
-import {StyleSheet} from 'react-native';
-import {Colors} from '../../Constants';
+import { Dimensions, StyleSheet } from 'react-native';
+
+import { Colors } from '../../Constants';
 
 export default StyleSheet.create({
   containerOverlay: {
     ...StyleSheet.absoluteFillObject,
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(25, 22, 34, 0.7)',
     justifyContent: 'center',
     alignItems: 'center',
   },
   textHeader: {
-    fontSize: 20,
-    textTransform: 'uppercase',
-    textAlign: 'center',
-    fontWeight: 'bold',
+    fontSize: 40,
   },
   containerContent: {
+    width: Dimensions.get('window').width - 40,
     padding: 20,
-    width: '80%',
     backgroundColor: Colors.CYAN,
     borderRadius: 30,
-  },
-  line: {
-    width: '100%',
-    borderBottomWidth: 0.4,
-    borderColor: Colors.SELECTION,
-    paddingTop: 5,
-    marginBottom: 10,
+    overflow: 'hidden',
   },
   textLaunch: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 5,
+    fontSize: 25,
+    marginTop: 20,
   },
   text: {
     marginLeft: 5,
     fontSize: 18,
     marginTop: 20,
+    color: Colors.INTERMEDIATE,
   },
   textInput: {
     width: '100%',
-    borderColor: Colors.BG,
-    borderWidth: 1,
     borderRadius: 50,
+    marginTop: 7,
     paddingHorizontal: 20,
-  },
-  textArea: {
-    width: '100%',
-    borderColor: Colors.BG,
-    borderWidth: 1,
-    borderRadius: 20,
-    paddingHorizontal: 20,
-    marginVertical: 10,
-    flexWrap: 'wrap',
+    backgroundColor: Colors.COMMENT,
+    opacity: 0.7,
   },
   button: {
     width: '100%',
-    borderColor: Colors.BG,
-    borderWidth: 1,
     borderRadius: 50,
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: 20,
     padding: 10,
-    backgroundColor: Colors.BG,
+    backgroundColor: Colors.COMMENT,
   },
   textButton: {
     fontSize: 18,

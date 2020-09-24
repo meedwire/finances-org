@@ -1,5 +1,6 @@
-import {StyleSheet} from 'react-native';
-import {Colors} from '../../Constants';
+import { StyleSheet } from 'react-native';
+
+import { Colors } from '../../Constants';
 
 export default StyleSheet.create({
   container: {
@@ -8,6 +9,7 @@ export default StyleSheet.create({
   boxContainer: {
     backgroundColor: Colors.CYAN,
     padding: 20,
+    marginTop: 20,
     borderBottomEndRadius: 26,
     borderBottomStartRadius: 26,
     overflow: 'hidden',

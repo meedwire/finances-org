@@ -1,12 +1,13 @@
-import React, {memo, useState} from 'react';
+import { EvilIcons } from '@expo/vector-icons';
+import React, { memo, useState } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
+import { TapGestureHandler, RectButton } from 'react-native-gesture-handler';
+import Animated, { Easing, interpolate } from 'react-native-reanimated';
+import { useTapGestureHandler, mix, useTransition } from 'react-native-redash';
+
+import { Colors } from '../../Constants';
 import Button from '../Button';
-import {EvilIcons} from '@expo/vector-icons';
-import {Text, TouchableOpacity, View} from 'react-native';
 import styles from './styles';
-import Animated, {Easing, interpolate} from 'react-native-reanimated';
-import {TapGestureHandler, RectButton} from 'react-native-gesture-handler';
-import {useTapGestureHandler, mix, useTransition} from 'react-native-redash';
-import {Colors} from '../../Constants';
 
 interface Values {
   text: string;
@@ -19,11 +20,11 @@ interface Props {
   minWidth?: number;
 }
 
-const SelectButton: React.FC<Props> = ({selectedValue, values, minWidth}) => {
+const SelectButton: React.FC<Props> = ({ selectedValue, values, minWidth }) => {
   const [show, setShow] = useState(false);
   const [selected, setSelected] = useState(values[0].text);
-  const [position, setPosition] = useState({x: 0, y: 0});
-  const style = {minWidth: minWidth ?? '100%'};
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const style = { minWidth: minWidth ?? '100%' };
 
   const transition = useTransition(show, {
     duration: 100,
@@ -73,7 +74,8 @@ const SelectButton: React.FC<Props> = ({selectedValue, values, minWidth}) => {
                 },
               ],
             },
-          ]}>
+          ]}
+        >
           {values.map((value) => {
             const backGround =
               selected === value.text ? Colors.CYAN : 'transparent';
@@ -86,8 +88,9 @@ const SelectButton: React.FC<Props> = ({selectedValue, values, minWidth}) => {
                     backgroundColor: backGround,
                   },
                 ]}
-                onPress={() => show && handleSelect(value)}>
-                <Text style={{color: 'white'}}>{value.text}</Text>
+                onPress={() => show && handleSelect(value)}
+              >
+                <Text style={{ color: 'white' }}>{value.text}</Text>
               </Button>
             );
           })}
@@ -96,12 +99,13 @@ const SelectButton: React.FC<Props> = ({selectedValue, values, minWidth}) => {
       <Button
         onLayout={({
           nativeEvent: {
-            layout: {x, y},
+            layout: { x, y },
           },
-        }) => setPosition({x, y})}
+        }) => setPosition({ x, y })}
         activeOpacity={0.9}
         onPress={() => setShow((prev) => !prev)}
-        style={[styles.buttonChangeCurrency, style]}>
+        style={[styles.buttonChangeCurrency, style]}
+      >
         <EvilIcons
           style={styles.icon}
           name="chevron-down"

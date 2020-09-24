@@ -1,6 +1,8 @@
+import { EvilIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { StatusBar } from 'expo-status-bar';
 import React, { useContext, useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import { Colors } from '../../Constants';
@@ -8,15 +10,16 @@ import { ContextScreen } from '../../Contexts';
 import { TypeAccount } from '../../GlobalTypes';
 import { AccountBox } from '../../components/AccountBox';
 import Button from '../../components/Button';
+import { ModalAdd } from '../../components/ModalAdd';
 import { Text } from '../../components/Text';
 import getRealm from '../../schemas';
 import { SvgBack } from './SvgBack';
 import styles from './styles';
 
 const ConfigScreen: React.FC = () => {
-  const [acconunts, setAccounts] = useState<
-    Realm.Results<Realm.Object & TypeAccount>
-  >();
+  const [acconunts, setAccounts] = useState<TypeAccount[]>();
+  const [nothingAccount, setNothingAccount] = useState(false);
+  const [open, setOpen] = useState(false);
   const navigation = useNavigation();
   const { setActiveScreen } = useContext(ContextScreen);
 
@@ -27,50 +30,71 @@ const ConfigScreen: React.FC = () => {
     return focus;
   }, [navigation, setActiveScreen]);
 
-  useEffect(() => {
-    async function getData() {
-      try {
-        const realm = await getRealm();
+  async function getData() {
+    try {
+      const realm = await getRealm();
+      const data = realm
+        .objects<TypeAccount>('Accounts')
+        .map(({ type, bank, created, description, id, name, value }) => ({
+          type,
+          bank,
+          created,
+          description,
+          id,
+          name,
+          value,
+        }));
 
-        // realm.write(() => {
-        //   realm.create<TypeAccount>('Accounts', {
-        //     id: realm.objects('Accounts').length + 1,
-        //     bank: 'BRADESCO',
-        //     name: 'CONTA SECUNDARIA',
-        //     value: 1636.98,
-        //     type: '0',
-        //     description: 'Conta de uso dia a dia',
-        //     created: new Date(),
-        //   });
-        // });
-
-        console.log(realm.objects<TypeAccount>('Accounts'));
-
-        setAccounts(realm.objects<TypeAccount>('Accounts'));
-      } catch (error) {
-        alert(JSON.stringify(error));
+      if (data.length === 0) {
+        setNothingAccount(true);
+        return;
       }
+
+      setAccounts(data);
+      realm.removeAllListeners();
+    } catch (error) {
+      Alert.alert('Error:', `Error message: ${JSON.stringify(error)}`);
     }
+  }
+
+  useEffect(() => {
     getData();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      const realm = await getRealm();
+      realm.addListener('change', () => getData());
+    })();
   }, []);
 
   return (
     <LinearGradient colors={[Colors.BG, Colors.CYAN]} style={styles.container}>
+      <StatusBar animated backgroundColor={Colors.CYAN} />
       <View style={styles.boxContainer}>
         <Text size={40}>Configurações</Text>
         <Text size={25} style={styles.textRegisterAccounts}>
-          Contas cadastradas:
+          {!nothingAccount ? 'Contas cadastradas:' : 'Você não possui contas '}
         </Text>
-        {!!acconunts &&
+        {acconunts ? (
           acconunts?.map((account) => {
             return <AccountBox key={account.id} account={account} />;
-          })}
+          })
+        ) : (
+          <View style={styles.boxNothingAccounts}>
+            <Text style={styles.textNothingAccount}>
+              SEM CONTAS CADASTRADAS
+            </Text>
+            <EvilIcons name="exclamation" size={80} color={Colors.RED} />
+          </View>
+        )}
 
         <SvgBack />
       </View>
-      <Button style={styles.buttonAdd}>
+      <Button onPress={() => setOpen(true)} style={styles.buttonAdd}>
         <Text style={styles.textButtonAdd}>NOVA CONTA</Text>
       </Button>
+      <ModalAdd onClose={setOpen} open={open} />
     </LinearGradient>
   );
 };

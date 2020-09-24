@@ -1,14 +1,20 @@
-import {StyleSheet} from 'react-native';
-import {Colors} from '../../Constants';
+import { StyleSheet } from 'react-native';
+
+import { Colors } from '../../Constants';
 
 export default StyleSheet.create({
   boxAccount: {
     padding: 20,
     borderRadius: 24,
-    backgroundColor: 'rgb(90,75,129)',
     marginTop: 10,
   },
   boxButtonEdit: {
+    position: 'absolute',
+    top: 10,
+    right: 40,
+    zIndex: 2,
+  },
+  boxButtonDelete: {
     position: 'absolute',
     top: 10,
     right: 10,

@@ -10,4 +10,5 @@ export const Colors = {
   PURPLE: '#78D1E1',
   RED: '#E96379',
   YELLOW: '#e7de79',
+  INTERMEDIATE: '#C4BBE6',
 };
